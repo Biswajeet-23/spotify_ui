@@ -30,7 +30,6 @@ class _MusicDetailPageState extends State<MusicDetailPage> {
 
   // audio player here
   AudioPlayer? advancedPlayer;
-  AudioCache? audioCache;
   bool isPlaying = true;
 
   @override
@@ -41,25 +40,21 @@ class _MusicDetailPageState extends State<MusicDetailPage> {
   }
 
   initPlayer() {
-    advancedPlayer = new AudioPlayer();
-    audioCache = new AudioCache(fixedPlayer: advancedPlayer);
+    advancedPlayer = AudioPlayer();
     playSound(widget.songUrl);
   }
 
   playSound(localPath) async {
-    await audioCache.play(localPath);
+    await advancedPlayer?.play(AssetSource(localPath));
+    advancedPlayer?.resume();
   }
 
   stopSound(localPath) async {
-    File audioFile = await audioCache.load(localPath);
-    await advancedPlayer.setUrl(audioFile.path);
-    advancedPlayer.stop();
+    advancedPlayer?.stop();
   }
 
   seekSound() async {
-    File audioFile = await audioCache.load(widget.songUrl);
-    await advancedPlayer.setUrl(audioFile.path);
-    advancedPlayer.seek(Duration(milliseconds: 2000));
+    advancedPlayer?.seek(Duration(milliseconds: 2000));
   }
 
   @override
